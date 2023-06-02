@@ -84,14 +84,22 @@ function handleClickNewCatForm(event) {
 //Adicionar nuevo gatito
 function addNewKitten(event) {
     event.preventDefault();
-    const valueDesc = inputDesc.value;
-    const valuePhoto = inputPhoto.value;
-    const valueName = inputName.value;
-    if (valueDesc === "" || valuePhoto === "" || valueName === "") {
+    const newKittenDataObject = {
+        //completa el código
+        image: inputPhoto.value,
+        name: inputName.value,
+        desc: inputDesc.value,
+        race: inputRace.value,
+
+      };
+    if (newKittenDataObject.desc === "" || newKittenDataObject.image === "" || newKittenDataObject.name === "") {
         labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
     }
-    else if (valueDesc !== "" && valuePhoto !== "" && valueName !== "") {
-        labelMessageError.innerHTML = "";
+    else if (newKittenDataObject.desc !== "" && newKittenDataObject.image !== "" && newKittenDataObject.name!== "") {
+        labelMessageError.innerHTML = "Mola! Un nuevo gatito en adalab!";
+        kittenDataList.push(newKittenDataObject);
+        renderKittenList(kittenDataList);
+        
     }
 }
 //Cancelar la búsqueda de un gatito
