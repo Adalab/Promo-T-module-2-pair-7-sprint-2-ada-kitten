@@ -37,7 +37,9 @@ const kittenData_3 = {
     race: "Maine Coon",
 };
 
-const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+// const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+
+let kittenDataList = [];
 
 //Funciones
 function renderKitten(kittenData) {
@@ -152,6 +154,15 @@ buttonCancelForm.addEventListener("click", cancelNewKitten);
 
 
 
+const GITHUB_USER = '<crisMuniz>';
+const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
 
+fetch(SERVER_URL)
+.then((response) => response.json())
+.then((data) => {
+    console.log(data);
+    kittenDataList = data.results
+    renderKittenList(kittenDataList)
+})
 
 
