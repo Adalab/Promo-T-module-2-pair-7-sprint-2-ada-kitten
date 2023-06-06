@@ -15,7 +15,7 @@ const inputRace = document.querySelector('.js-input-race');
 const linkNewFormElememt = document.querySelector('.js-button-new-form');
 const labelMessageError = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
-
+const input_search_race = document.querySelector('.js_in_search_race');
 
 //Objetos con cada gatito
 const kittenData_1 = {
@@ -104,6 +104,7 @@ function cancelNewKitten(event) {
 }
 
 //Filtrar por descripción
+/*
 function filterKitten(event) {
     event.preventDefault();
     const descrSearchText = input_search_desc.value;
@@ -113,7 +114,24 @@ function filterKitten(event) {
             listElement.innerHTML += renderKitten(kittenItem);
         }
     }
+}*/
+
+function filterKitten(event) {
+    event.preventDefault();
+    const descrSearchText = input_search_desc.value;
+    listElement.innerHTML = "";
+    const raceSearchText = input_search_race.value;
+
+  const kittenListFiltered = kittenDataList
+        .filter((kitten) => kitten.desc.includes(descrSearchText)
+        )
+        .filter((kitten)=> kitten.race.includes(raceSearchText));
+  //Vuelve a pintar el listado de gatitos filtrados en el HTML.
+  renderKittenList(kittenListFiltered);
+  
 }
+
+//const 
 
 //Mostrar el litado de gatitos en ell HTML
 renderKittenList(kittenDataList);
