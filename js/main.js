@@ -86,12 +86,16 @@ function handleClickNewCatForm(event) {
 //Adicionar nuevo gatito
 function addNewKitten(event) {
     event.preventDefault();
+    const newImage = inputPhoto.value;
+    const newDescription = inputDesc.value;
+    const newName = inputName.value;
+    const newRace = inputRace.value;
     const newKittenDataObject = {
         //completa el código
-        image: inputPhoto.value,
-        name: inputName.value,
-        desc: inputDesc.value,
-        race: inputRace.value,
+        image: newImage,
+        name: newName,
+        desc: newDescription,
+        race: newRace ,
 
       };
     if (newKittenDataObject.desc === "" || newKittenDataObject.image === "" || newKittenDataObject.name === "") {
@@ -157,12 +161,55 @@ buttonCancelForm.addEventListener("click", cancelNewKitten);
 const GITHUB_USER = '<crisMuniz>';
 const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
 
-fetch(SERVER_URL)
-.then((response) => response.json())
-.then((data) => {
-    console.log(data);
-    kittenDataList = data.results
-    renderKittenList(kittenDataList)
-})
+// fetch(SERVER_URL)
+// .then((response) => response.json())
+// .then((data) => {
+//     console.log(data);
+//     kittenDataList = data.results
+//     renderKittenList(kittenDataList)
+// })
 
+// almacenar en el localstorage
+
+const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
+
+if (kittenListStored) {
+    //si existe el listado de gatitos en el local storage
+    // vuelve a pintar el listado de gatitos
+    kittenDataList = kittenListStored
+    renderKittenList(kittenDataList)
+  } else {
+    //sino existe el listado de gatitos en el local storage
+    //haz la petición al servidor
+    fetch(SERVER_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        kittenDataList = data.results
+        renderKittenList(kittenDataList)
+        localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+//  hacer peticion al servidor con la info obtenida de addNewKitten
+
+fetch(SERVER_URL, {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify(newKittenDataObject),
+})
+  .then((response) => response.json())
+  .then((data) => {
+    if (data.success) {
+      //Completa y/o modifica el código:
+      //Agrega el nuevo gatito al listado
+      //Guarda el listado actualizado en el local stoarge
+      //Visualiza nuevamente el listado de gatitos
+      //Limpia los valores de cada input
+    } else {
+      //muestra un mensaje de error.
+    }
+  });
 
