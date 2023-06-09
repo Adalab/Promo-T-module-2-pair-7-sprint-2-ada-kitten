@@ -42,30 +42,8 @@ const kittenData_3 = {
 let kittenDataList = [];
 
 //Funciones
-function renderKitten(kittenData) {
-    const kitten = `<li class="card">
-    <article>
-      <img
-        class="card_img"
-        src=${kittenData.image}
-        alt="gatito"
-      />
-      <h3 class="card_title">${kittenData.name}</h3>
-      <h3 class="card_race">${kittenData.race}</h3>
-      <p class="card_description">
-      ${kittenData.desc}
-      </p>
-    </article>
-    </li>`;
-    return kitten;
-}
 
-function renderKittenList(kittenDataList) {
-    listElement.innerHTML = "";
-    for (const kittenItem of kittenDataList) {
-        listElement.innerHTML += renderKitten(kittenItem);
-    }
-}
+
 
 //Mostrar/ocultar el formulario
 function showNewCatForm() {
@@ -102,9 +80,25 @@ function addNewKitten(event) {
         labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
     }
     else if (newKittenDataObject.desc !== "" && newKittenDataObject.image !== "" && newKittenDataObject.name!== "") {
-        labelMessageError.innerHTML = "Mola! Un nuevo gatito en adalab!";
-        kittenDataList.push(newKittenDataObject);
-        renderKittenList(kittenDataList);
+        
+        //  hacer peticion al servidor con la info obtenida de addNewKitten
+
+      fetch(SERVER_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(newKittenDataObject),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            labelMessageError.innerHTML = "Mola! Un nuevo gatito en adalab!";
+            kittenDataList.push(newKittenDataObject);
+            renderKittenList(kittenDataList);
+            localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
+          } else {
+            alert('Error: ' + data.message);
+          }
+        });
         
     }
 }
@@ -193,23 +187,66 @@ if (kittenListStored) {
       });
   }
 
-//  hacer peticion al servidor con la info obtenida de addNewKitten
 
-fetch(SERVER_URL, {
-  method: 'POST',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify(newKittenDataObject),
-})
-  .then((response) => response.json())
-  .then((data) => {
-    if (data.success) {
-      //Completa y/o modifica el código:
-      //Agrega el nuevo gatito al listado
-      //Guarda el listado actualizado en el local stoarge
-      //Visualiza nuevamente el listado de gatitos
-      //Limpia los valores de cada input
-    } else {
-      //muestra un mensaje de error.
+
+  ///ejercicio DOOM
+
+  function renderKitten(kittenData) {
+    const kitten = `<li class="card">
+    <article>
+      <img
+        class="card_img"
+        src=${kittenData.image}
+        alt="gatito"
+      />
+      <h3 class="card_title">${kittenData.name}</h3>
+      <h3 class="card_race">${kittenData.race}</h3>
+      <p class="card_description">
+      ${kittenData.desc}
+      </p>
+    </article>
+    </li>`;
+
+    const liElement = document.createElement('li');
+    liElement.classList.add('card');
+
+    const articleElement = document.createElement('article');
+    liElement. appendChild(articleElement);
+
+    const imgElement = document.createElement('img');
+    imgElement.classList.add('card_img');
+    imgElement.src= kittenData.image;
+    articleElement.appendChild(imgElement);
+
+    const h3title = document.createElement('h3');
+    h3title.classList.add('card_title');
+    articleElement.appendChild(h3title);
+    const textForTitle= document.createTextNode(kittenData.name);
+    h3title.appendChild(textForTitle);
+
+    const h3_race = document.createElement('h3');
+    h3_race.classList.add('card_race');
+    articleElement.appendChild(h3_race);
+
+    const textForRace = document.createTextNode(kittenData.race);
+    h3_race.appendChild(textForRace);
+
+    const pDesc = document.createElement('desc');
+    pDesc.classList.add('card_description');
+    articleElement.appendChild(pDesc);
+
+    const textForDesc = document.createTextNode(kittenData.desc);
+    pDesc.appendChild(textForDesc);
+
+    return liElement
+    
+  }
+
+  function renderKittenList(kittenDataList) {
+    listElement.innerHTML = "";
+    for (const kittenItem of kittenDataList) {
+        const newLiItem = renderKitten(kittenItem);
+
+        listElement.appendChild(newLiItem);
     }
-  });
-
+}
